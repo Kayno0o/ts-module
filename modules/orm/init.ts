@@ -20,6 +20,7 @@ export async function initDB(newDb: Database, abstractRepositories: AbstractRepo
 
   for (const repository of abstractRepositories) {
     repositories[repository.tableName] = repository
+    repository.init()
   }
 }
 
