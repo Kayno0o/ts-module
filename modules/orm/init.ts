@@ -1,8 +1,8 @@
 import type { Database } from 'bun:sqlite'
-import type { AbstractEntity } from './entity'
 import fs from 'node:fs'
 import path from 'node:path'
 import { firstUpper } from '@kaynooo/utils'
+import { __definition, type AbstractEntity } from './entity'
 import { AbstractRepository } from './repository'
 import { repositories } from './types/global'
 
@@ -13,9 +13,6 @@ export const getDB: () => Database = () => {
 }
 
 export async function initDB(newDb: Database, abstractRepositories: AbstractRepository<any>[]) {
-  // for (const repository of repositories) {
-  //   db.addRepository(repository)
-  // }
   db = newDb
 
   for (const repository of abstractRepositories) {
@@ -24,12 +21,21 @@ export async function initDB(newDb: Database, abstractRepositories: AbstractRepo
   }
 }
 
+export function getEntityName(entityOrConstructor: AbstractEntity | typeof AbstractEntity): string {
+  const constructor = typeof entityOrConstructor === 'function'
+    ? entityOrConstructor
+    : entityOrConstructor.constructor as typeof AbstractEntity
+
+  return constructor.name
+}
+
 export function getRepository<T extends AbstractEntity>(entity: T): AbstractRepository<T> | undefined {
-  return repositories[entity.__definition.tableName]
+  const name = getEntityName(entity)
+  return repositories[__definition[name].tableName]
 }
 
 // const entitiesDir = path.resolve(import.meta.dir, 'app', 'entities')
-export async function loadRepositoriesFromFile(entitiesDir: string): Promise<AbstractRepository<any>[]> {
+export async function loadRepositoriesFromFolder(entitiesDir: string): Promise<AbstractRepository<any>[]> {
   const repositories: AbstractRepository<any>[] = []
 
   const dirs = fs.readdirSync(entitiesDir)

@@ -1,15 +1,17 @@
+import type { AbstractEntity, DBField, Identifiable, InputQueryEntityType, QueryOptions } from '.'
 import { randomString } from '@kaynooo/utils'
-import { buildSelectQuery, buildUnique, buildUpdateQuery, type DBField, describeColumn, type EntityDefinition, getDB, getTableColumns, getUniqueFields, type Identifiable, type InputQueryEntityType, queryAll, queryOne, type QueryOptions, runQuery } from '.'
+import { __definition, buildSelectQuery, buildUnique, buildUpdateQuery, describeColumn, getDB, getEntityName, getTableColumns, getUniqueFields, queryAll, queryOne, runQuery } from '.'
 
 export class AbstractRepository<T extends Identifiable> {
   fields: Record<string, DBField> = {}
   tableName: string
   uniques: string[][] = []
 
-  constructor(entity: { __definition: EntityDefinition }) {
-    this.tableName = entity.__definition.tableName
-    this.fields = entity.__definition.fields
-    this.uniques = entity.__definition.uniques
+  constructor(entity: AbstractEntity) {
+    const name = getEntityName(entity)
+    this.tableName = __definition[name].tableName
+    this.fields = __definition[name].fields
+    this.uniques = __definition[name].uniques
   }
 
   create(entity: InputQueryEntityType<T>) {

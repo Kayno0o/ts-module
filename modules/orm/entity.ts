@@ -1,19 +1,23 @@
 import type { DBField, Identifiable } from './types'
 
+export const __definition: Record<string, EntityDefinition> = {}
+
 export function Entity(tableName: string, options?: { unique?: string[][] }) {
-  // eslint-disable-next-line ts/no-unsafe-function-type
-  return function (constructor: Function) {
-    constructor.prototype.__definition.tableName = tableName
-    constructor.prototype.__definition.uniques = options?.unique ?? []
+  return function (constructor: typeof AbstractEntity) {
+    const name = constructor.name
+    __definition[name] ??= { fields: {}, tableName: '', uniques: [] }
+    __definition[name].tableName = tableName
+    __definition[name].uniques = options?.unique ?? []
   }
 }
 
 export function Column(type: 'bool' | 'int' | 'float' | 'text' | 'blob', options: Omit<DBField, 'type'>) {
   return function (target: AbstractEntity, key: string) {
-    target.__definition ??= { default: null, fields: {}, tableName: '', uniques: [] }
-    target.__definition.fields ??= {}
+    const name = target.constructor.name
+    __definition[name] ??= { fields: {}, tableName: '', uniques: [] }
+    __definition[name].fields ??= {}
 
-    target.__definition.fields[key] = { default: options.default, nullable: options.nullable, type, unique: options.unique }
+    __definition[name].fields[key] = { default: options.default, nullable: options.nullable, type, unique: options.unique }
   }
 }
 
@@ -25,7 +29,5 @@ export interface EntityDefinition {
 }
 
 export class AbstractEntity implements Identifiable {
-  __definition: EntityDefinition = { fields: {}, tableName: '', uniques: [] }
-
   id = 0
 }
