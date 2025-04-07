@@ -11,11 +11,15 @@
     "url": "https://github.com/Kayno0o/ts-module/issues"
   },
   "exports": {
-    ".": "./dist/index.js",
-    "./orm": "./dist/orm/index.js"
+    "./orm": {
+      "types": "./dist/orm/index.d.ts",
+      "import": "./dist/orm/index.js"
+    },
+    "./rcon": {
+      "types": "./dist/rcon/index.d.ts",
+      "import": "./dist/rcon/index.js"
+    }
   },
-  "module": "./dist/index.js",
-  "types": "./dist/index.d.ts",
   "files": [
     "./dist"
   ],
@@ -34,6 +38,7 @@
   },
   "devDependencies": {
     "@antfu/eslint-config": "^3.9.1",
+    "@kaynooo/eslint": "^1.1.2",
     "@kaynooo/utils": "^1.1.4",
     "@types/bun": "latest",
     "@types/chalk": "^2.2.4",

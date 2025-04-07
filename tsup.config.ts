@@ -1,12 +1,12 @@
 import { defineConfig } from 'tsup'
 
 export default defineConfig({
+  entry: ['./modules/orm/index.ts', './modules/rcon/index.ts'],
+  format: ['esm'],
   clean: true,
-  dts: true, // Generate declaration file (.d.ts)
-  entry: ['./modules/index.ts', './modules/orm/index.ts'],
-  format: ['esm'], // Build for commonJS and ESmodules
+  dts: true,
   minify: true,
-  sourcemap: true,
+  sourcemap: false,
   splitting: false,
   target: ['node22'],
 })
