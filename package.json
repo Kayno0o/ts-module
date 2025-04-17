@@ -22,13 +22,17 @@
     "./maze": {
       "types": "./dist/maze/index.d.ts",
       "import": "./dist/maze/index.js"
+    },
+    "./genetics": {
+      "types": "./dist/genetics/index.d.ts",
+      "import": "./dist/genetics/index.js"
     }
   },
   "files": [
     "./dist"
   ],
   "scripts": {
-    "build": "bun build modules/orm/index.ts modules/rcon/index.ts --outdir dist --target bun --format esm --minify --production",
+    "build": "bun build modules/orm/index.ts modules/rcon/index.ts modules/maze/index.ts modules/genetics/index.ts --outdir dist --target bun --format esm --minify --production",
     "lint:fix": "eslint . --fix",
     "dev": "bun --watch ./app/index.ts",
     "start:orm": "bun ./app/orm/index.ts"
