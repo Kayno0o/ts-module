@@ -1,8 +1,8 @@
-import { declareLogger } from '@kaynooo/utils'
-import chalk from 'chalk'
-import { getDB, type SQLQueryBindings } from '.'
+import type { SQLQueryBindings } from '.'
+import { colors, declareLogger } from '@kaynooo/utils'
+import { getDB } from '.'
 
-const { log } = declareLogger<'sqlite'>({ logLevel: import.meta.env.LOG_LEVEL || 'info', serviceColor: { sqlite: chalk.cyan } })
+const log = declareLogger<'sqlite'>({ logLevel: import.meta.env.LOG_LEVEL || 'info', serviceColor: { sqlite: colors.cyan } })
 
 function dbLog(type: string, query: string, params: SQLQueryBindings[]) {
   if (import.meta.env.DEBUG_DB === 'true') {

@@ -1,4 +1,4 @@
-import type { DBField, Identifiable } from './types'
+import type { DBField, Identifiable } from '.'
 
 export const __definition: Record<string, EntityDefinition> = {}
 

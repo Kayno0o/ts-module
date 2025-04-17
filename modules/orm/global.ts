@@ -1,3 +1,3 @@
-import type { AbstractRepository } from '..'
+import type { AbstractRepository } from '.'
 
 export const repositories: Record<string, AbstractRepository<any>> = {}

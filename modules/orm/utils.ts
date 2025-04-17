@@ -28,7 +28,7 @@ export function getTableUnique(table: string): SqliteUnique[] {
 }
 
 export function buildUnique(uniques: string[]): string {
-  return uniques.toSorted().join(':')
+  return uniques.sort().join(':')
 }
 
 export function getUniqueFields(tableName: string): string[] {

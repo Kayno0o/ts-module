@@ -9,9 +9,9 @@ export class AbstractRepository<T extends Identifiable> {
 
   constructor(entity: AbstractEntity) {
     const name = getEntityName(entity)
-    this.tableName = __definition[name].tableName
-    this.fields = __definition[name].fields
-    this.uniques = __definition[name].uniques
+    this.tableName = __definition[name]!.tableName
+    this.fields = __definition[name]!.fields
+    this.uniques = __definition[name]!.uniques
   }
 
   create(entity: InputQueryEntityType<T>) {
@@ -50,7 +50,7 @@ export class AbstractRepository<T extends Identifiable> {
       // check for missing columns
       const missingColumns = Object.keys(this.fields).filter(key => !columns.find(column => column.name === key))
       for (const missingColumn of missingColumns) {
-        const columnDefinition = describeColumn(String(missingColumn), this.fields[missingColumn])
+        const columnDefinition = describeColumn(String(missingColumn), this.fields[missingColumn]!)
         if (columnDefinition.includes('UNIQUE')) {
           requiresRecreation = true
         }

@@ -1,10 +1,9 @@
 import type { Database } from 'bun:sqlite'
+import type { AbstractEntity } from '.'
 import fs from 'node:fs'
 import path from 'node:path'
 import { firstUpper } from '@kaynooo/utils'
-import { __definition, type AbstractEntity } from './entity'
-import { AbstractRepository } from './repository'
-import { repositories } from './types/global'
+import { __definition, AbstractRepository, repositories } from '.'
 
 let db: Database
 
@@ -31,7 +30,7 @@ export function getEntityName(entityOrConstructor: AbstractEntity | typeof Abstr
 
 export function getRepository<T extends AbstractEntity>(entity: T): AbstractRepository<T> | undefined {
   const name = getEntityName(entity)
-  return repositories[__definition[name].tableName]
+  return repositories[__definition[name]!.tableName]
 }
 
 // const entitiesDir = path.resolve(import.meta.dir, 'app', 'entities')

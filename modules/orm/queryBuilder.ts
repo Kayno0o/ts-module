@@ -1,5 +1,6 @@
 import type { PartialRecord } from '@kaynooo/utils'
-import { type Identifiable, type InputQueryEntityType, queryAll, queryOne, type SQLQueryBindings } from '.'
+import type { Identifiable, InputQueryEntityType, SQLQueryBindings } from '.'
+import { queryAll, queryOne } from '.'
 
 export interface QueryOptions<T extends Identifiable> {
   notNull?: PartialRecord<keyof T, boolean>
