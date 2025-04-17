@@ -1,15 +1,7 @@
-# mc-api
+# @kaynooo/ts-module
 
-To install dependencies:
-
-```bash
-bun install
-```
-
-To run:
+## Installation
 
 ```bash
-bun run index.ts
+bun install @kaynooo/ts-module
 ```
-
-This project was created using `bun init` in bun v1.1.34. [Bun](https://bun.sh) is a fast all-in-one JavaScript runtime.
