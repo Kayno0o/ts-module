@@ -3,7 +3,7 @@ import type { DBField, Identifiable } from '.'
 export const __definition: Record<string, EntityDefinition> = {}
 
 export function Entity(tableName: string, options?: { unique?: string[][] }) {
-  return function (constructor: typeof AbstractEntity) {
+  return function <T extends new (...args: any[]) => AbstractEntity>(constructor: T) {
     const name = constructor.name
     __definition[name] ??= { fields: {}, tableName: '', uniques: [] }
     __definition[name].tableName = tableName

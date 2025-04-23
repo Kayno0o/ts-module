@@ -1,5 +1,5 @@
 import path from 'node:path'
-import { initDB } from '@kaynooo/ts-module/orm'
+import { initDB } from '#orm'
 import { Database } from 'bun:sqlite'
 import { UserRepository } from './repositories/userRepository'
 

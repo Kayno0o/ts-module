@@ -40,8 +40,7 @@
     "typecheck": "tsc --noEmit",
     "build": "bun run clean && bun build ./modules/**/index.ts ./modules/index.ts --outdir dist --target node --packages=external --format esm --minify --production",
     "lint:fix": "eslint . --fix",
-    "dev": "bun --watch ./app/index.ts",
-    "start:orm": "bun ./app/orm/index.ts"
+    "start:orm": "bun ./examples/orm/index.ts"
   },
   "peerDependencies": {
     "typescript": "^5.8.3"

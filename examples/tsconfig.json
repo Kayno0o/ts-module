@@ -10,6 +10,12 @@
 
     // Bundler mode
     "moduleResolution": "bundler",
+    "paths": {
+      "#genetics": ["../modules/genetics/index.ts"],
+      "#maze": ["../modules/maze/index.ts"],
+      "#orm": ["../modules/orm/index.ts"],
+      "#rcon": ["../modules/rcon/index.ts"]
+    },
     "allowImportingTsExtensions": true,
     "allowJs": true,
 

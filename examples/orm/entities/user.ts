@@ -1,4 +1,4 @@
-import { AbstractEntity, Column, Entity } from '@kaynooo/ts-module/orm'
+import { AbstractEntity, Column, Entity } from '#orm'
 
 @Entity('user')
 export class User extends AbstractEntity {
