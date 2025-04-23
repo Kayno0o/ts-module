@@ -9,7 +9,7 @@ export class GrowingTreeMaze extends Maze {
 
     while (queue.length) {
       const i = getCell(queue)
-      const pos = queue[i]
+      const pos = queue[i]!
 
       const [newPos, dir] = this.randomNonVisitedNeighbour(pos)
       if (newPos === -1 || dir === -1) {
@@ -17,8 +17,8 @@ export class GrowingTreeMaze extends Maze {
         continue
       }
 
-      this.blocks[pos] |= dir
-      this.blocks[newPos] |= reverseWall(dir)
+      this.blocks[pos]! |= dir
+      this.blocks[newPos]! |= reverseWall(dir)
 
       queue.unshift(newPos)
     }
