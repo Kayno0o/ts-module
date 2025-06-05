@@ -29,12 +29,12 @@ export class Maze {
 
     const sides: Dir[] = [1, 2, 4, 8]
     const startSideIndex = randomInt(4)
-    this.startSide = data?.startSide ?? sides[startSideIndex]
+    this.startSide = data?.startSide ?? sides[startSideIndex]!
     this.start = data?.start || this.getEdgeIndex(this.startSide)
 
     sides.splice(startSideIndex, 1)
     const endSideIndex = randomInt(3)
-    this.endSide = data?.endSide ?? sides[endSideIndex]
+    this.endSide = data?.endSide ?? sides[endSideIndex]!
     this.end = data?.end || this.getEdgeIndex(this.endSide)
   }
 
@@ -55,7 +55,7 @@ export class Maze {
   }
 
   canMoveToBlock(pos: number, dir: Dir): boolean {
-    return (this.blocks[pos] & dir) !== 0
+    return (this.blocks[pos]! & dir) !== 0
   }
 
   getNeighbours(pos: number): number[] {
@@ -136,7 +136,7 @@ export class Maze {
     for (let y = 0; y < this.h; y++) {
       for (let x = 0; x < this.w; x++) {
         const i = y * this.w + x
-        let wall = this.blocks[i]
+        let wall = this.blocks[i]!
         if (i === this.start)
           wall |= this.startSide
         if (i === this.end)
@@ -180,7 +180,7 @@ export class Maze {
   }
 
   static loadFromString<T extends typeof Maze>(this: T, maze: string): InstanceType<T> {
-    const [w, start, end, startSide, endSide, path] = maze.split('_')
+    const [w, start, end, startSide, endSide, path] = maze.split('_') as [string, string, string, string, string, string]
 
     const blocks = Array.from(path, dir => Number.parseInt(dir, 16))
 

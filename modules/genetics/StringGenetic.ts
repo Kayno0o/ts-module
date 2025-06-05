@@ -85,8 +85,8 @@ export class StringGenetic {
       generation++
       await this.emit('generation', generation)
 
-      if (!bestOfAll || population[0].fitness > bestOfAll.fitness) {
-        bestOfAll = population[0]
+      if (!bestOfAll || population[0]!.fitness > bestOfAll.fitness) {
+        bestOfAll = population[0]!
         if (this.verbose)
           console.log(`Gen ${generation} | New best: ${bestOfAll.fitness}`)
         await this.emit('best', bestOfAll)
@@ -96,8 +96,8 @@ export class StringGenetic {
       const newPopulation: Gene[] = []
 
       for (let i = 0; i < this.populationSize; i++) {
-        const parentA = matingPool[Math.floor(Math.random() * matingPool.length)].genes
-        const parentB = matingPool[Math.floor(Math.random() * matingPool.length)].genes
+        const parentA = matingPool[Math.floor(Math.random() * matingPool.length)]!.genes
+        const parentB = matingPool[Math.floor(Math.random() * matingPool.length)]!.genes
         const childGenes = this.mutate(this.crossover(parentA, parentB))
         newPopulation.push({ genes: childGenes, fitness: this.calcFitness(childGenes) })
       }

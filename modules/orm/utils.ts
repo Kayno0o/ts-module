@@ -1,12 +1,13 @@
 import type { DBField, SqliteColumn, SqliteUnique } from '.'
-import { notEmpty } from '@kaynooo/utils'
+import { isEmpty } from '@kaynooo/utils'
 import { queryAll } from '.'
 
 export function describeColumn(name: string, field: DBField): string {
   // handle string default value
-  const defaultQ = notEmpty(field.default) ? field.type === 'text' ? `'${field.default}'` : String(field.default) : ''
+  const text = field.type === 'text' ? `'${field.default}'` : String(field.default)
+  const defaultQ = !isEmpty(field.default) ? ` DEFAULT ${text}` : undefined
 
-  return `${name} ${field.type.toUpperCase()}${defaultQ ? ` DEFAULT ${defaultQ}` : ''}${field.nullable ? '' : ' NOT NULL'}${field.unique ? ' UNIQUE' : ''}${field.primary ? ' PRIMARY KEY' : ''}`
+  return `${name} ${field.type.toUpperCase()}${defaultQ ?? ''}${field.nullable ? '' : ' NOT NULL'}${field.unique ? ' UNIQUE' : ''}${field.primary ? ' PRIMARY KEY' : ''}`
 }
 
 export function isUnique(table: string, column: SqliteColumn): boolean {
@@ -24,11 +25,11 @@ export function getTableColumns(table: string): SqliteColumn[] {
 }
 
 export function getTableUnique(table: string): SqliteUnique[] {
-  return (queryAll<SqliteUnique>(`PRAGMA index_list(${table})`) as SqliteUnique[]).filter(unique => unique.unique)
+  return queryAll<SqliteUnique>(`PRAGMA index_list(${table})`).filter(unique => unique.unique)
 }
 
 export function buildUnique(uniques: string[]): string {
-  return uniques.sort().join(':')
+  return uniques.toSorted((a, b) => a.localeCompare(b)).join(':')
 }
 
 export function getUniqueFields(tableName: string): string[] {

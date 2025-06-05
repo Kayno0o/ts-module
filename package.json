@@ -36,9 +36,8 @@
     "README.md"
   ],
   "scripts": {
-    "clean": "rm -rf dist",
     "typecheck": "tsc --noEmit",
-    "build": "bun run clean && bun build ./modules/**/index.ts ./modules/index.ts --outdir dist --target node --packages=external --format esm --minify --production",
+    "build": "tsup",
     "lint:fix": "eslint . --fix",
     "start:orm": "bun ./examples/orm/index.ts"
   },
@@ -46,16 +45,17 @@
     "typescript": "^5.8.3"
   },
   "dependencies": {
-    "@kaynooo/utils": "^1.2.11",
+    "@kaynooo/utils": "^1.2.15",
     "prismarine-nbt": "^2.7.0",
-    "rcon-client": "^4.2.5"
+    "rcon-client": "^4.2.5",
+    "tsup": "^8.5.0"
   },
   "devDependencies": {
-    "@kaynooo/eslint": "^1.1.5",
-    "@types/bun": "^1.2.10",
-    "eslint": "^9.25.1",
+    "@kaynooo/eslint": "^1.1.6",
+    "@types/bun": "^1.2.15",
+    "eslint": "^9.28.0",
     "eslint-plugin-github": "^6.0.0",
-    "lint-staged": "^15.5.1"
+    "lint-staged": "^16.1.0"
   },
   "lint-staged": {
     "*": "eslint --fix"
