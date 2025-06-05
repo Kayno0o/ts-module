@@ -1,7 +1,7 @@
 {
   "name": "@kaynooo/ts-module",
   "type": "module",
-  "version": "1.0.13",
+  "version": "1.0.14",
   "repository": {
     "type": "git",
     "url": "git+https://github.com/Kayno0o/ts-module.git"
