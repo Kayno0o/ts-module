@@ -29,7 +29,7 @@ export function buildWhere<T extends Identifiable>(options: QueryOptions<T>): [s
 
 export function buildOrder<T extends Identifiable>(options: QueryOptions<T>): string {
   if (options.order)
-    return ` ORDER BY ${Object.entries(options.order).map(([key, value]) => `${key} ${value}`).join(', ')} `
+    return ` ORDER BY ${Object.entries(options.order).map(entry => entry.join(' ')).join(', ')} `
 
   return ''
 }

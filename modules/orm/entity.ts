@@ -12,7 +12,7 @@ export function Entity(tableName: string, options?: { unique?: string[][] }) {
 }
 
 export function Column(type: 'bool' | 'int' | 'float' | 'text' | 'blob', options: Omit<DBField, 'type'>) {
-  return function (target: AbstractEntity, key: string) {
+  return function (target: any, key: string) {
     const name = target.constructor.name
     __definition[name] ??= { fields: {}, tableName: '', uniques: [] }
     __definition[name].fields ??= {}
