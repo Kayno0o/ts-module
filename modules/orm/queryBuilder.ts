@@ -67,7 +67,7 @@ export function buildUpdateQuery<T extends Identifiable>(tableName: string, enti
     query += whereQuery
   }
   else {
-    query = `INSERT INTO ${tableName} (${entries.map(([key]) => key).join(', ')}) VALUES (${entries.map(() => `?`).join(', ')})`
+    query = `INSERT INTO ${tableName} (${entries.map(([key]) => key).join(', ')}) VALUES (${entries.map(() => '?').join(', ')})`
   }
 
   return [query, params]
