@@ -45,17 +45,17 @@
     "typescript": "^5.8.3"
   },
   "dependencies": {
-    "@kaynooo/utils": "^1.2.15",
+    "@kaynooo/utils": "^1.2.22",
     "prismarine-nbt": "^2.7.0",
     "rcon-client": "^4.2.5",
     "tsup": "^8.5.0"
   },
   "devDependencies": {
-    "@kaynooo/eslint": "^1.1.6",
-    "@types/bun": "^1.2.15",
-    "eslint": "^9.28.0",
+    "@kaynooo/eslint": "^1.1.12",
+    "@types/bun": "^1.2.17",
+    "eslint": "^9.30.0",
     "eslint-plugin-github": "^6.0.0",
-    "lint-staged": "^16.1.0"
+    "lint-staged": "^16.1.2"
   },
   "lint-staged": {
     "*": "eslint --fix"
