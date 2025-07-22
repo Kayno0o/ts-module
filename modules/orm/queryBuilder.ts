@@ -1,5 +1,5 @@
 import type { PartialRecord } from '@kaynooo/utils'
-import type { Identifiable, InputQueryEntityType, SQLQueryBindings } from '.'
+import type { EntityInput, Identifiable, SQLQueryBindings } from '.'
 import { queryAll, queryOne } from '.'
 
 export interface QueryOptions<T extends Identifiable> {
@@ -49,10 +49,10 @@ export function buildSelectQuery<T extends Identifiable>(tableName: string, opti
   return [query, params]
 }
 
-export function buildUpdateQuery<T extends Identifiable>(tableName: string, entity: Partial<InputQueryEntityType<T>>, options?: QueryOptions<T>): [string, SQLQueryBindings[]] {
+export function buildUpdateQuery<T extends Identifiable>(tableName: string, entity: Partial<EntityInput<T>>, options?: QueryOptions<T>): [string, SQLQueryBindings[]] {
   const params: SQLQueryBindings[] = []
 
-  const entries = Object.entries(entity).filter(([key]) => key !== 'id')
+  const entries = Object.entries(entity).filter(([key]) => key !== 'id' && !key.startsWith('_'))
   if (!entries.length)
     return ['', []]
 

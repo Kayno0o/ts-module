@@ -3,6 +3,24 @@ export type ExcludeFunctions<T> = {
   [K in keyof T]: T[K] extends Function ? never : K;
 }[keyof T]
 
+type IgnoredFields = 'id' | `get${string}` | `${string}Computed` | `_${string}`
+
+export type EntityInput<T extends Identifiable> =
+  Required<Pick<T, {
+    [K in keyof T]: T[K] extends (...args: any[]) => any ? never :
+      K extends IgnoredFields ? never :
+        undefined extends T[K] ? never :
+          null extends T[K] ? never :
+            K
+  }[keyof T]>> &
+  Partial<Pick<T, {
+    [K in keyof T]: T[K] extends (...args: any[]) => any ? never :
+      K extends IgnoredFields ? never :
+        undefined extends T[K] ? K :
+          null extends T[K] ? K :
+            never
+  }[keyof T]>>
+
 export interface SqliteColumn {
   cid: number
   name: string
@@ -26,10 +44,10 @@ export interface DBField {
   reference?: string | { key: string, table: string }
   type: 'bool' | 'int' | 'float' | 'text' | 'blob'
   unique?: boolean
+  name?: string
 }
 
 export type QueryEntityType<T extends Identifiable> = Omit<Pick<T, ExcludeFunctions<T>>, '__definition'>
-export type InputQueryEntityType<T extends Identifiable> = Omit<Pick<T, ExcludeFunctions<T>>, 'id' | '__definition'>
 
 export interface Identifiable {
   id: number

@@ -1,43 +1,55 @@
-import type { AbstractEntity, DBField, Identifiable, InputQueryEntityType, QueryOptions } from '.'
+import type { DBField, EntityInput, Identifiable, QueryOptions } from '.'
 import { randomString } from '@kaynooo/utils'
-import { __definition, buildSelectQuery, buildUnique, buildUpdateQuery, describeColumn, getDB, getEntityName, getTableColumns, getUniqueFields, queryAll, queryOne, runQuery } from '.'
+import { __definition, buildSelectQuery, buildUnique, buildUpdateQuery, describeColumn, getDB, getTableColumns, getUniqueFields, queryAll, queryOne, runQuery } from '.'
 
 export class AbstractRepository<T extends Identifiable> {
   fields: Record<string, DBField> = {}
   tableName: string
   uniques: string[][] = []
+  private EntityConstructor: new (data: T) => T
 
-  constructor(entity: AbstractEntity) {
-    const name = getEntityName(entity)
+  constructor(EntityConstructor: new (data: T) => T) {
+    this.EntityConstructor = EntityConstructor
+    const name = EntityConstructor.name
     this.tableName = __definition[name]!.tableName
     this.fields = __definition[name]!.fields
     this.uniques = __definition[name]!.uniques
   }
 
-  create(entity: InputQueryEntityType<T>) {
+  create(entity: EntityInput<T>): T {
     runQuery(...buildUpdateQuery<T>(this.tableName, this.trimEntityFields(entity)))
     const lastId = getDB().query<{ id: number }, any>('SELECT last_insert_rowid() as id').get()!
     return this.find(lastId.id)!
   }
 
-  delete(id: number) {
+  delete(id: number): void {
     runQuery(`DELETE FROM ${this.tableName} WHERE id = ?`, [id])
   }
 
   find(id: number): T | null {
-    return queryOne<T>(...buildSelectQuery<T>(this.tableName, { where: { id } as any }))
+    const result = queryOne<any>(...buildSelectQuery<T>(this.tableName, { where: { id } as any }))
+    return result ? this.instantiateEntity(result) : null
   }
 
-  findAll() {
-    return queryAll<T>(...buildSelectQuery<T>(this.tableName))
+  findAll(): T[] {
+    const results = queryAll<any>(...buildSelectQuery<T>(this.tableName))
+    return results.map(result => this.instantiateEntity(result))
   }
 
-  findAllBy(options: QueryOptions<T>) {
-    return queryAll<T>(...buildSelectQuery<T>(this.tableName, options))
+  findAllBy(options: QueryOptions<T>): T[] {
+    const results = queryAll<any>(...buildSelectQuery<T>(this.tableName, options))
+    return results.map(result => this.instantiateEntity(result))
   }
 
-  findOneBy(options: QueryOptions<T>) {
-    return queryOne<T>(...buildSelectQuery<T>(this.tableName, options))
+  findOneBy(options: QueryOptions<T>): T | null {
+    const result = queryOne<any>(...buildSelectQuery<T>(this.tableName, options))
+    return result ? this.instantiateEntity(result) : null
+  }
+
+  private instantiateEntity(data: any): T {
+    const instance = Object.create(this.EntityConstructor.prototype)
+    Object.assign(instance, data)
+    return instance
   }
 
   init() {
@@ -178,7 +190,7 @@ export class AbstractRepository<T extends Identifiable> {
   }
 
   /** remove extra fields that are not in DB */
-  trimEntityFields(entity: InputQueryEntityType<T>): InputQueryEntityType<T> {
+  trimEntityFields(entity: EntityInput<T>): EntityInput<T> {
     const result = JSON.parse(JSON.stringify(entity))
     const columnNames = Object.keys(this.fields)
     for (const key in result) {
@@ -188,7 +200,7 @@ export class AbstractRepository<T extends Identifiable> {
     return result
   }
 
-  update(id: number, entity: Partial<InputQueryEntityType<T>>) {
+  update(id: number, entity: Partial<EntityInput<T>>) {
     runQuery(...buildUpdateQuery<T>(this.tableName, entity, { where: { id } as any }))
     return this.find(id)!
   }
