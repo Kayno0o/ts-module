@@ -28,9 +28,9 @@ export function getEntityName(entityOrConstructor: AbstractEntity | typeof Abstr
   return constructor.name
 }
 
-export function getRepository<T extends AbstractEntity>(entity: new (data: T) => T): AbstractRepository<T> {
+export function getRepository<T extends AbstractEntity>(entity: new (...data: any[]) => T): AbstractRepository<T> {
   const name = getEntityName(entity.prototype)
-  return repositories[__definition[name]!.tableName]!
+  return repositories[__definition[name]!.tableName] as AbstractRepository<T>
 }
 
 // const entitiesDir = path.resolve(import.meta.dir, 'app', 'entities')

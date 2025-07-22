@@ -1,4 +1,3 @@
-import type { EntityInput } from '#orm'
 import { AbstractEntity, Column, Entity, getRepository } from '#orm'
 import { Tag } from './tag'
 
@@ -14,11 +13,10 @@ export class User extends AbstractEntity {
     tag?: Tag | null
   }
 
-  constructor(data: EntityInput<User>) {
+  constructor(data: { username: string }) {
     super()
 
     this.username = data.username
-    this.tag_id = data.tag_id
   }
 
   getTag(): Tag | null {

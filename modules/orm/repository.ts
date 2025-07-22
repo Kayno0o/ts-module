@@ -6,9 +6,9 @@ export class AbstractRepository<T extends Identifiable> {
   fields: Record<string, DBField> = {}
   tableName: string
   uniques: string[][] = []
-  private EntityConstructor: new (data: T) => T
+  private EntityConstructor: new (...data: any[]) => T
 
-  constructor(EntityConstructor: new (data: T) => T) {
+  constructor(EntityConstructor: new (...data: any[]) => T) {
     this.EntityConstructor = EntityConstructor
     const name = EntityConstructor.name
     this.tableName = __definition[name]!.tableName
