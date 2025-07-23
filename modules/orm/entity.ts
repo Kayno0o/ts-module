@@ -20,13 +20,16 @@ interface DBTypeMap {
   blob: Uint8Array | Buffer
 }
 
-export function Column<T extends keyof DBTypeMap>(
+export function Column<
+  T extends keyof DBTypeMap,
+  Options extends Omit<DBField, 'type'>,
+>(
   type: T,
-  options?: Omit<DBField, 'type'>,
+  options?: Options,
 ) {
   return function <Target extends AbstractEntity, Key extends keyof Target>(
     target: Target,
-    key: Key & (DBTypeMap[T] extends Target[Key] ? Key : never),
+    key: Key & (Target[Key] extends (Options['nullable'] extends true ? DBTypeMap[T] | null : DBTypeMap[T]) ? Key : never),
   ) {
     const name = target.constructor.name
     __definition[name] ??= { fields: {}, tableName: '', uniques: [] }

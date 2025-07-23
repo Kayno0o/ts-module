@@ -7,9 +7,9 @@ export class User extends AbstractEntity {
   username: string
 
   @Column('int', { nullable: true, unique: false, primary: true, reference: { key: 'id', table: 'tag' } })
-  tag_id?: number
+  tag_id: number | null = null
 
-  // error: invalid type
+  // error: invalid type. should be number|null
   @Column('int', { nullable: true, unique: false, primary: true, reference: { key: 'id', table: 'tag' } })
   tag_id2?: string
 
@@ -24,7 +24,7 @@ export class User extends AbstractEntity {
   }
 
   getTag(): Tag | null {
-    if (this.tag_id === undefined)
+    if (!this.tag_id)
       return null
 
     this._cache ??= {}
