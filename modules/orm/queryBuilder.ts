@@ -5,7 +5,7 @@ import { queryAll, queryOne } from '.'
 export interface QueryOptions<T extends Identifiable> {
   notNull?: PartialRecord<keyof T, boolean>
   order?: PartialRecord<keyof T, 'asc' | 'desc'>
-  where?: PartialRecord<keyof T, T[keyof T] | T[keyof T][]>
+  where?: { [K in keyof T]?: T[K] | T[K][] }
 }
 
 export function buildWhere<T extends Identifiable>(options: QueryOptions<T>): [string, SQLQueryBindings[]] {

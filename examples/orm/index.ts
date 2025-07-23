@@ -18,8 +18,11 @@ const tag = tagRepo.create({ name: 'My tag' })
 
 const userRepo = getRepository(User)
 const newUser = userRepo.create({ username: 'My User', tag_id: tag.id })
+
 console.log('Created user:', newUser)
 console.log('User\'s tag:', newUser.getTag())
 console.log(userRepo.update(newUser.id, newUser))
 
 console.log('find in 3,4,5,6,7 9,10', userRepo.findAllBy({ where: { id: [3, 4, 5, 6, 7, 9, 10] } }))
+
+console.log('user no tag', userRepo.create({ username: 'My User2' }))
