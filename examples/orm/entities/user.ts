@@ -27,6 +27,6 @@ export class User extends AbstractEntity {
     if (!this.tag_id)
       return null
 
-    return this._cache.tag ??= getRepository(Tag)!.find(this.tag_id)
+    return this._cache.tag ??= getRepository(Tag).find(this.tag_id)
   }
 }
