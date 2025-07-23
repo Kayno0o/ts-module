@@ -5,7 +5,7 @@ import { queryAll, queryOne } from '.'
 export interface QueryOptions<T extends Identifiable> {
   notNull?: PartialRecord<keyof T, boolean>
   order?: PartialRecord<keyof T, 'asc' | 'desc'>
-  where?: PartialRecord<keyof T, string | number>
+  where?: PartialRecord<keyof T, T[keyof T] | T[keyof T][]>
 }
 
 export function buildWhere<T extends Identifiable>(options: QueryOptions<T>): [string, SQLQueryBindings[]] {
@@ -13,8 +13,28 @@ export function buildWhere<T extends Identifiable>(options: QueryOptions<T>): [s
   const params: SQLQueryBindings[] = []
 
   if (options.where) {
-    where.push(...Object.keys(options.where).map(key => `${key} = ?`))
-    params.push(...Object.values(options.where) as SQLQueryBindings[])
+    for (const [key, value] of Object.entries(options.where)) {
+      if (Array.isArray(value)) {
+        if (value.length === 0) {
+          where.push('1 = 0')
+          continue
+        }
+
+        if (value.length === 1) {
+          where.push(`${key} = ?`)
+          params.push(value[0] as SQLQueryBindings)
+          continue
+        }
+
+        const placeholders = value.map(() => '?').join(', ')
+        where.push(`${key} IN (${placeholders})`)
+        params.push(...(value as SQLQueryBindings[]))
+        continue
+      }
+
+      where.push(`${key} = ?`)
+      params.push(value as SQLQueryBindings)
+    }
   }
 
   if (options.notNull) {
