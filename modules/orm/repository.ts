@@ -53,6 +53,13 @@ export class AbstractRepository<T extends Identifiable> {
 
   private instantiateEntity(data: any): T {
     const instance = Object.create(this.EntityConstructor.prototype)
+
+    const tempInstance = new this.EntityConstructor({} as any)
+    for (const key of Object.getOwnPropertyNames(tempInstance)) {
+      if ((tempInstance as any)[key] !== undefined)
+        instance[key] = (tempInstance as any)[key]
+    }
+
     Object.assign(instance, data)
     return instance
   }

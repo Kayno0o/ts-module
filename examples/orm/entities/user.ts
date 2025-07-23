@@ -13,9 +13,9 @@ export class User extends AbstractEntity {
   @Column('int', { nullable: true, unique: false, primary: true, reference: { key: 'id', table: 'tag' } })
   tag_id2?: string
 
-  _cache?: {
+  _cache: {
     tag?: Tag | null
-  }
+  } = {}
 
   constructor(data: { username: string }) {
     super()
@@ -27,7 +27,6 @@ export class User extends AbstractEntity {
     if (!this.tag_id)
       return null
 
-    this._cache ??= {}
     return this._cache.tag ??= getRepository(Tag)!.find(this.tag_id)
   }
 }
