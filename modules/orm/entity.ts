@@ -1,3 +1,4 @@
+import type { Buffer } from 'node:buffer'
 import type { DBField, Identifiable } from '.'
 
 export const __definition: Record<string, EntityDefinition> = {}
@@ -11,13 +12,27 @@ export function Entity(tableName: string, options?: { unique?: string[][] }) {
   }
 }
 
-export function Column(type: 'bool' | 'int' | 'float' | 'text' | 'blob', options?: Omit<DBField, 'type'>) {
-  return function (target: AbstractEntity, key: string) {
+interface DBTypeMap {
+  bool: boolean
+  int: number
+  float: number
+  text: string
+  blob: Uint8Array | Buffer
+}
+
+export function Column<T extends keyof DBTypeMap>(
+  type: T,
+  options?: Omit<DBField, 'type'>,
+) {
+  return function <Target extends AbstractEntity, Key extends keyof Target>(
+    target: Target,
+    key: Key & (DBTypeMap[T] extends Target[Key] ? Key : never),
+  ) {
     const name = target.constructor.name
     __definition[name] ??= { fields: {}, tableName: '', uniques: [] }
     __definition[name].fields ??= {}
 
-    __definition[name].fields[options?.name ?? key] = { default: options?.default, nullable: options?.nullable, type, unique: options?.unique }
+    __definition[name].fields[String(options?.name ?? key)] = { default: options?.default, nullable: options?.nullable, type, unique: options?.unique }
   }
 }
 

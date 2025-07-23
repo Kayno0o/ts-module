@@ -22,6 +22,11 @@ export class AbstractRepository<T extends Identifiable> {
     return this.find(lastId.id)!
   }
 
+  update(id: number, entity: Partial<EntityInput<T>>) {
+    runQuery(...buildUpdateQuery<T>(this.tableName, this.trimEntityFields(entity), { where: { id } as any }))
+    return this.find(id)!
+  }
+
   delete(id: number): void {
     runQuery(`DELETE FROM ${this.tableName} WHERE id = ?`, [id])
   }
@@ -190,7 +195,7 @@ export class AbstractRepository<T extends Identifiable> {
   }
 
   /** remove extra fields that are not in DB */
-  trimEntityFields(entity: EntityInput<T>): EntityInput<T> {
+  trimEntityFields(entity: Partial<EntityInput<T>>): Partial<EntityInput<T>> {
     const result = JSON.parse(JSON.stringify(entity))
     const columnNames = Object.keys(this.fields)
     for (const key in result) {
@@ -198,10 +203,5 @@ export class AbstractRepository<T extends Identifiable> {
         delete result[key]
     }
     return result
-  }
-
-  update(id: number, entity: Partial<EntityInput<T>>) {
-    runQuery(...buildUpdateQuery<T>(this.tableName, entity, { where: { id } as any }))
-    return this.find(id)!
   }
 }
